@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -33,11 +34,10 @@ public class TopicosController {
 
 	/* Use pagination for a large number of items found */
 	@GetMapping
-	public Page<TopicoDto> lista(@RequestParam(required = false) String nomeCurso, @RequestParam int pagina,
-								 @RequestParam int quantidade, @RequestParam String ordenacao) {
-
-		/* Implement sorting */
-		Pageable paginacao = PageRequest.of((pagina-1), quantidade, Direction.DESC, ordenacao);
+	/* Now we must pass by url parameters the values for page, size and sort. eg.: page=0 size=10 sort=id,asc */
+	public Page<TopicoDto> lista(@RequestParam(required = false) String nomeCurso,
+								 @PageableDefault(sort = "id", direction = Direction.DESC, page = 0, size = 10)
+										 Pageable paginacao) {
 
 		if (nomeCurso == null) {
 			/* JPA uses the Pageable object and sort the results */
