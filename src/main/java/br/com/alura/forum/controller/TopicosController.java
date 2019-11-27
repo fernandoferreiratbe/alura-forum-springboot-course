@@ -8,6 +8,7 @@ import br.com.alura.forum.model.Topico;
 import br.com.alura.forum.repository.CursoRepository;
 import br.com.alura.forum.repository.TopicoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -32,9 +33,11 @@ public class TopicosController {
 	@Autowired
 	private CursoRepository cursoRepository;
 
-	/* Use pagination for a large number of items found */
 	@GetMapping
+	@Cacheable(value = "listaDeTopicos")
+	/* Use pagination for a large number of items found */
 	/* Now we must pass by url parameters the values for page, size and sort. eg.: page=0 size=10 sort=id,asc */
+	/* Uses cache to lista method */
 	public Page<TopicoDto> lista(@RequestParam(required = false) String nomeCurso,
 								 @PageableDefault(sort = "id", direction = Direction.DESC, page = 0, size = 10)
 										 Pageable paginacao) {
