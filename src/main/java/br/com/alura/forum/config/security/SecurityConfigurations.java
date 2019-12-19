@@ -12,13 +12,18 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @EnableWebSecurity
 @Configuration
 public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    AutenticacaoService autenticacaoService;
+    private AutenticacaoService autenticacaoService;
+
+    @Autowired
+    private TokenService tokenService;
+
 
     @Override
     @Bean
@@ -38,11 +43,14 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .antMatchers(HttpMethod.GET, "/topicos").permitAll()
+                .antMatchers(HttpMethod.GET, "/topicos/*").permitAll()
                 .antMatchers(HttpMethod.POST, "/auth").permitAll()
                 .anyRequest().authenticated()
                 .and().csrf().disable()
                 /* As we took .and().formLogin() we lost the controller responsible to handle authorization */
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                /* Create an engine to use our new object to get token from client request */
+                .and().addFilterBefore(new AutenticacaoViaTokenFilter(this.tokenService), UsernamePasswordAuthenticationFilter.class);
     }
 
     /* Static resources configuration */
