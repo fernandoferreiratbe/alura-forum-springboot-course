@@ -1,5 +1,6 @@
 package br.com.alura.forum.config.security;
 
+import br.com.alura.forum.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,6 +21,9 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private AutenticacaoService autenticacaoService;
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
     @Autowired
     private TokenService tokenService;
@@ -50,7 +54,7 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
                 /* As we took .and().formLogin() we lost the controller responsible to handle authorization */
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 /* Create an engine to use our new object to get token from client request */
-                .and().addFilterBefore(new AutenticacaoViaTokenFilter(this.tokenService), UsernamePasswordAuthenticationFilter.class);
+                .and().addFilterBefore(new AutenticacaoViaTokenFilter(this.tokenService, this.usuarioRepository), UsernamePasswordAuthenticationFilter.class);
     }
 
     /* Static resources configuration */
