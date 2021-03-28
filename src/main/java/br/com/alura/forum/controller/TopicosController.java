@@ -56,15 +56,13 @@ public class TopicosController {
 	@GetMapping("/{id}")
 	public ResponseEntity<DetalhesDoTopicoDto> detalhar(@PathVariable Long id) {
 		Optional<Topico> topico = this.topicoRepository.findById(id);
-		
-		if (!topico.isPresent()) {
-			return ResponseEntity.notFound().build();
-		}
-		
-		return ResponseEntity.ok(new DetalhesDoTopicoDto(topico.get()));
+
+		return topico.map(value -> ResponseEntity.ok(new DetalhesDoTopicoDto(value))).orElseGet(() -> ResponseEntity.notFound().build());
+
 	}
 	
 	@PostMapping
+	@Transactional
 	@CacheEvict(value = "listaDeTopicos", allEntries = true)
 	public ResponseEntity<TopicoDto> cadastrar(@Valid @RequestBody TopicoForm form, UriComponentsBuilder uriCompBuilder) {
 		Topico topico = form.converter(this.cursoRepository);

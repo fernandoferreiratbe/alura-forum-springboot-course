@@ -52,6 +52,7 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/actuator").permitAll()
                 .antMatchers(HttpMethod.GET, "/actuator/**").permitAll()
                 .anyRequest().authenticated()
+                /* Prevent Cross-Site Request Forgery Attack */
                 .and().csrf().disable()
                 /* As we took .and().formLogin() we lost the controller responsible to handle authorization */
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
