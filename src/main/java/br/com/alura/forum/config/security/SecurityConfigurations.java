@@ -51,6 +51,7 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/auth").permitAll()
                 .antMatchers(HttpMethod.GET, "/actuator").permitAll()
                 .antMatchers(HttpMethod.GET, "/actuator/**").permitAll()
+                .antMatchers(HttpMethod.DELETE, "/topicos/**").hasRole("MODERADOR")
                 .anyRequest().authenticated()
                 /* Prevent Cross-Site Request Forgery Attack */
                 .and().csrf().disable()
