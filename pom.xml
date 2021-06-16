@@ -100,6 +100,7 @@
 	</dependencies>
 
 	<build>
+		<finalName>alura-forum</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
