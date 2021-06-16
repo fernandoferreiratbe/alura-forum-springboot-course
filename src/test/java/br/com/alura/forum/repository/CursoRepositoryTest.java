@@ -12,7 +12,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@ActiveProfiles("test")
+@ActiveProfiles(value = "test")
 public class CursoRepositoryTest {
 
     @Autowired
